@@ -180,7 +180,7 @@ def index():
 # 
 #     localhost:8111/another
 #
-# notice that the functio name is another() rather than index()
+# notice that the function name is another() rather than index()
 # the functions for each app.route needs to have different names
 #
 @app.route('/another')
@@ -200,8 +200,9 @@ def add():
 
 @app.route('/login')
 def login():
-    abort(401)
-    this_is_never_executed()
+  return render_template("login.html")
+    # abort(401)
+    # this_is_never_executed()
 
 
 if __name__ == "__main__":

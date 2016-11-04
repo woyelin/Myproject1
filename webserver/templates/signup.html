@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<!-- bootstrap helper form -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/css/bootstrap-formhelpers.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.js"></script>
+
+	<meta charset="UTF-8">
+	<title>Create Account</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<h2>
+				<center>
+					<legend style="font-size: 35px">Create Your Account</legend>
+				</center>
+			</h2>
+
+			<form class="form-horizontal">
+				<fieldset>
+
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">User Name</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Insert your user name" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Email</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Insert your Email" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Password</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Insert your Password" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Text input: Confirm Password-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Confirm Password</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Confirm your Password" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Text input: Country -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Country</label>
+						<div class="col-md-4">
+							<select id="countries_states1" class="form-control bfh-countries" data-country="US" data-flags="true"></select>
+						</div>
+					</div>
+
+					<!-- Text input: State -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">State</label>
+						<div class="col-md-4">
+							<select class="form-control bfh-states" data-country="countries_states1"></select>
+						</div>
+					</div>
+
+					<!-- Text input: City-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">City</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Insert your City" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Text input: Street Address-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Street Address</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Insert your street address" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Text input: Zipcode -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Zipcode</label>
+						<div class="col-md-4">
+							<input id="textinput" name="textinput" placeholder="Insert your Zipcode" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Button -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="singlebutton"></label>
+						<div class="col-md-4">
+							<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+							&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+							<a href="login.html" class="text-center new-account">Already have an account?</a>
+						</div>
+					</div>
+
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
