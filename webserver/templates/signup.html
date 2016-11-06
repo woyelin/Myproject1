@@ -14,24 +14,28 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/css/bootstrap-formhelpers.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.js"></script>
 
+<!-- 	<script type='text/javascript' src="{{ url_for('static', filename='js/signup.js')}}"></script> -->
+
+<!-- 	<script type='text/javascript' src="../static/js/signup.js"></script> -->
+
 	<meta charset="UTF-8">
-	<title>Create Account</title>
+	<title>Sign Up</title>
 </head>
 
 <body>
 
 	<ul class="nav nav-tabs pull-right" style="font-size: 15px">
 		<li role="presentation">
-			<a href="index.html">Home</a>
+			<a href="/">Home</a>
 		</li>
 		<li role="presentation">
-			<a href="store.html">Store</a>
+			<a href="store">Store</a>
 		</li>
 		<li role="presentation">
-			<a href="review.html">Review</a>
+			<a href="review">Review</a>
 		</li>
 		<li role="presentation">
-			<a href="signup.html">Sign Up</a>
+			<a href="signup">Sign Up</a>
 		</li>
 	</ul>
 	<legend></legend>
@@ -39,43 +43,34 @@
 	<div class="container">
 		<div class="row">
 
-			<center style="font-size: 35px">Create Your Account</center>
+			<center style="font-size: 35px">Sign Up Your Account</center>
 
-			<form class="form-horizontal">
+			<form method="POST" action="/UserSignup" class="form-horizontal">
 				<fieldset>
 
-					<!-- Text input-->
+					<!-- Username -->
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">User Name</label>
 						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Insert your user name" class="form-control input-md" required="" type="text">
+							<input id="username" name="username" placeholder="Insert your user name" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
 
-					<!-- Text input-->
+					<!-- Email -->
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Email</label>
 						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Insert your Email" class="form-control input-md" required="" type="text">
+							<input id="email" name="email" placeholder="Insert your Email" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
 
-					<!-- Text input-->
+					<!-- password-->
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Password</label>
 						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Insert your Password" class="form-control input-md" required="" type="text">
-							<span class="help-block"></span>
-						</div>
-					</div>
-
-					<!-- Text input: Confirm Password-->
-					<div class="form-group">
-						<label class="col-md-4 control-label" for="textinput">Confirm Password</label>
-						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Confirm your Password" class="form-control input-md" required="" type="text">
+							<input id="password" name="password" placeholder="Insert your Password" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -84,7 +79,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Country</label>
 						<div class="col-md-4">
-							<select id="countries_states1" class="form-control bfh-countries" data-country="US" data-flags="true"></select>
+							<select id="countries_states1" class="form-control bfh-countries" name ="country" data-country="US" data-flags="true"></select>
 						</div>
 					</div>
 
@@ -92,7 +87,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">State</label>
 						<div class="col-md-4">
-							<select class="form-control bfh-states" data-country="countries_states1"></select>
+							<select id="states" class="form-control bfh-states" name="state" data-country="countries_states1"></select>
 						</div>
 					</div>
 
@@ -100,7 +95,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">City</label>
 						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Insert your City" class="form-control input-md" required="" type="text">
+							<input id="city" name="city" placeholder="Insert your City" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -109,7 +104,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Street Address</label>
 						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Insert your street address" class="form-control input-md" required="" type="text">
+							<input id="streetaddress" name="streetaddress" placeholder="Insert your street address" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -118,7 +113,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Zipcode</label>
 						<div class="col-md-4">
-							<input id="textinput" name="textinput" placeholder="Insert your Zipcode" class="form-control input-md" required="" type="text">
+							<input id="zipcode" name="zipcode" placeholder="Insert your Zipcode" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -127,8 +122,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="singlebutton"></label>
 						<div class="col-md-4">
-							<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
-							<a href="login.html" class="pull-right">Already have an account?</a>
+							<button id="singlebutton" name="singlebutton" class="btn btn-primary" type='submit' >Submit</button>
 						</div>
 					</div>
 
