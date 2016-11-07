@@ -196,11 +196,6 @@ def store():
 
 
 
-
-
-
-
-
 @app.route('/review')
 def review():
     cursor = g.conn.execute("SELECT c.name customer, p.name product, r.comment review, r.date  FROM review r, customer c, product p where p.pid = r.pid and r.cid = c.cid")
@@ -220,12 +215,6 @@ def review():
 
 
 
-
-
-
-
-
-
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
 def add():
@@ -241,10 +230,11 @@ def postReview():
     name = request.form['name']
     email = request.form['email']
     password = request.form['password']
-    productName = request.form['selectbox3']
-    review = request.form.get('message')
+    product = request.form['selectbox3'].split(":")
+    pid, pname = product[0], ''.join(product[1:])
+    review = request.form['message']
 
-    print name, email, password, review
+    print review
     return redirect('/')
 
 
