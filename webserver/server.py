@@ -223,18 +223,50 @@ def userSignup():
     password = request.form['password']
     # insert into customer table
     args = (username, email, password)
-    g.conn.execute("INSERT INTO customer(name, email, password) VALUES(%s, %s, %s)", args)
+    cursor = g.conn.execute("INSERT INTO customer(name, email, password) VALUES(%s, %s, %s)", args)
+    cid = g.conn.execute("SELECT * FROM CUSTOMER WHERE name = %s and email = %s and password = %s", args ).fetchone()['cid']
 
+    # address table insert
     country = request.form['country']
     state = request.form['state']
     city = request.form['city']
     streetaddress = request.form['streetaddress']
     zipcode = request.form['zipcode']
-    # insert into address table
-    args = (country, state, city, streetaddress,zipcode )
-    g.conn.execute('INSERT INTO address(country, state, city, street_address, zip) VALUES (%s, %s, %s, %s, %s)', args)
+    args = (country, state, city, streetaddress, zipcode)
+    cursor = g.conn.execute("SELECT a.aid FROM ADDRESS a WHERE a.country = %s and a.state = %s and a.city = %s and a.street_address = %s and a.zip = %s", args)
+
+    if cursor.rowcount==0:
+    	g.conn.execute('INSERT INTO address(country, state, city, street_address, zip) VALUES (%s, %s, %s, %s, %s)', args)
+    	aid = g.conn.execute("SELECT a.aid FROM ADDRESS a WHERE a.country = %s and a.state = %s and a.city = %s and a.street_address = %s and a.zip = %s", args).fetchone()['aid']
+    else:
+    	aid = cursor.fetchone()['aid']
+    
+    # insert live table
+    g.conn.execute("INSERT INTO live VALUES(%s, %s)", (cid, aid))
+
+
+    # # check whether address already exists
+    # if cursor.fetchone() is None:
+    # 	g.conn.execute('INSERT INTO address(country, state, city, street_address, zip) VALUES (%s, %s, %s, %s, %s)', args)
+    # 	aid = g.conn.execute("SELECT a.aid FROM ADDRESS a WHERE a.country = %s and a.state = %s and a.city = %s and a.street_address = %s and a.zip = %s", args).fetchone()['aid']
+    # else:
+    # 	print cursor.previous()
+    # 	aid = cursor.previous()['aid']
+
+
+
+
+    # if(cursor.rowcount==0):
+    #     # insert into address table
+    #     args = (country, state, city, streetaddress,zipcode )
+    #     g.conn.execute('INSERT INTO address(country, state, city, street_address, zip) VALUES (%s, %s, %s, %s, %s)', args)
+    #     aid = g.conn.execute('SELECT MAX(aid) FROM ADDRESS').fetchone()['aid']
+    # else:
+    #     aid = cursor.fetchone()['aid']
+
 
     # # insert into live table
+    # pid = g.conn.execute('SELECT')
     # g.conn.execute('INSERT INTO live VALUES( (SELECT max(cid) FROM customer), (SELECT max(aid) FROM address))')
 
 
