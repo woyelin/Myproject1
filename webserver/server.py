@@ -195,14 +195,35 @@ def store():
     return render_template("store.html", **context)
 
 
+
+
+
+
+
+
 @app.route('/review')
 def review():
-    cursor = g.conn.execute("select c.name customer, p.name product, r.comment review from review r, customer c, product p where p.pid = r.pid and r.cid = c.cid")
+    cursor = g.conn.execute("SELECT c.name customer, p.name product, r.comment review, r.date  FROM review r, customer c, product p where p.pid = r.pid and r.cid = c.cid")
     reviews = []
     for review in cursor:
-        reviews.append([review['customer'], review['product'], review['review']])
-    context = dict(data=reviews)
+        reviews.append([review['customer'], review['product'], review['review'], review['date']])
+
+
+    cursor = g.conn.execute("SELECT pid, name FROM PRODUCT")
+    products = [];
+    for product in cursor:
+        products.append([product['pid'], product['name']])
+
+    context = dict(data=reviews, productkey=products)
     return render_template("review.html", **context)
+
+
+
+
+
+
+
+
 
 
 # Example of adding new data to the database
@@ -213,6 +234,19 @@ def add():
     cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
     g.conn.execute(text(cmd), name1 = name, name2 = name);
     return redirect('/')
+
+
+@app.route('/postreview', methods=["POST"])
+def postReview():
+    name = request.form['name']
+    email = request.form['email']
+    password = request.form['password']
+    productName = request.form['selectbox3']
+    review = request.form.get('message')
+
+    print name, email, password, review
+    return redirect('/')
+
 
 
 

@@ -10,120 +10,128 @@
 	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<!-- 	<script type='text/javascript' src="{{url_for('static', filename='js/review.js')}}"></script> -->
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css')}}">
+	<!-- 	<script type='text/javascript' src="{{url_for('static', filename='js/review.js')}}"></script>
+-->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css')}}">
 
-	<meta charset="UTF-8">
-	<title>Review</title>
+<!-- bootstrap form helper CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/css/bootstrap-formhelpers.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.min.js"></script>
+
+<meta charset="UTF-8">
+<title>Review</title>
 </head>
 <body>
-	<ul class="nav nav-tabs pull-right" style="font-size: 15px">
-		<li role="presentation">
-			<a href="/">Home</a>
-		</li>
-		<li role="presentation">
-			<a href="store">Store</a>
-		</li>
-		<li role="presentation">
-			<a href="review">Review</a>
-		</li>
-		<li role="presentation">
-			<a href="signup">Sign Up</a>
-		</li>
-	</ul>
-	<legend></legend>
+<ul class="nav nav-tabs pull-right" style="font-size: 15px">
+	<li role="presentation">
+		<a href="/">Home</a>
+	</li>
+	<li role="presentation">
+		<a href="store">Store</a>
+	</li>
+	<li role="presentation">
+		<a href="review">Review</a>
+	</li>
+	<li role="presentation">
+		<a href="signup">Sign Up</a>
+	</li>
+</ul>
+<legend></legend>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6 col-md-offset-3">
-				<div class="well well-sm">
-					<form class="form-horizontal" action="" method="post">
-						<fieldset>
-							<legend class="text-center">Write your review</legend>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="well well-sm">
+				<form class="form-horizontal" action="/postreview" method="POST">
+					<fieldset>
+						<legend class="text-center">Write your review</legend>
 
-							<!-- Name input-->
-							<div class="form-group">
-								<label class="col-md-3 control-label" for="name">Username</label>
-								<div class="col-md-9">
-									<input id="name" name="name" type="text" placeholder="Your name" class="form-control"></div>
-							</div>
+						<!-- Name input-->
+						<div class="form-group">
+							<label class="col-md-3 control-label" for="name">Username</label>
+							<div class="col-md-9">
+								<input id="name" name="name" type="text" placeholder="Your name" class="form-control"></div>
+						</div>
 
-							<!-- Email input-->
-							<div class="form-group">
-								<label class="col-md-3 control-label" for="email">E-mail</label>
-								<div class="col-md-9">
-									<input id="email" name="email" type="text" placeholder="Your email" class="form-control"></div>
-							</div>
+						<!-- Email input-->
+						<div class="form-group">
+							<label class="col-md-3 control-label" for="email">E-mail</label>
+							<div class="col-md-9">
+								<input id="email" name="email" type="text" placeholder="Your email" class="form-control"></div>
+						</div>
 
-							<!-- Password input-->
-							<div class="form-group">
-								<label class="col-md-3 control-label" for="password">Password</label>
-								<div class="col-md-9">
-									<input id="password" name="password" type="text" placeholder="Your password" class="form-control"></div>
-							</div>
+						<!-- Password input-->
+						<div class="form-group">
+							<label class="col-md-3 control-label" for="password">Password</label>
+							<div class="col-md-9">
+								<input id="password" name="password" type="text" placeholder="Your password" class="form-control"></div>
+						</div>
 
-							<!-- Product input-->
-							<div class="form-group">
-								<label class="col-md-3 control-label" for="product">Product</label>
-								<div class="col-md-9">
-									<input id="product" name="product" type="text" placeholder="Your product to review" class="form-control"></div>
-							</div>
-
-							<!-- Message body -->
-							<div class="form-group">
-								<label class="col-md-3 control-label" for="message">Review</label>
-								<div class="col-md-9">
-									<textarea class="form-control" id="message" name="message" placeholder="Please enter your message here..." rows="5"></textarea>
+						<div class="form-group">
+							<label class="col-md-3 control-label" for="product">Product</label>
+							<div class="col-md-9" >
+								<div class="bfh-selectbox" type="text" data-name="selectbox3" data-value="12" data-filter="true">
+									{% for product in productkey %}
+									<div data-value={{product[0]}}>{{product[1]}}</div>
+									{% endfor %}
 								</div>
 							</div>
-
-							<!-- Form actions -->
-							<!-- 						<div class="form-group">
-							<div class="col-md-12 text-right">
-								<button id="postreview" >Post</button>
-							</div>
 						</div>
-						-->
-					</fieldset>
-				</form>
-			</div>
-		</div>
+
+					<!-- Message body-->
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="message">Review</label>
+						<div class="col-md-9">
+							<textarea class="form-control" id="message" name="message" placeholder="Please enter your message here..." rows="5"></textarea>
+						</div>
+					</div>
+
+					<!-- Form actions -->
+					<!-- 						<div class="form-group">
+					<div class="col-md-12 text-right">
+						<button id="postreview" >Post</button>
+					</div>
+				</div>
+				-->
+
+				<center>
+					<button class="post" type='submit' style="font-size: 20px">Post</button>
+				</center>
+
+
+			</fieldset>
+		</form>
 	</div>
 </div>
+</div>
+</div>
 
-<center>
-	<button class="post" style="font-size: 20px">Post</button>
-</center>
+
 
 <h2 style="text-align: center">History Reviews</h2>
 <div id="allReviews">
 <center>
-	<table id='historyReviews' style="width:90% border: 1px solid black">
+<table id='historyReviews' style="width:90% border: 1px solid black">
 	<thead>
 		<tr>
 			<th>User</th>
 			<th>Product</th>
 			<th>Reviews</th>
+			<th>Date</th>
 		</tr>
 	</thead>
 	<tbody>
 
+		{% for review in data %}
 		<tr>
-			<td>Eugene</td>
-			<td>Macbook</td>
-			<td>Sucks!!!!!!!</td>
+			{% for att in review %}
+			<td>{{att}}</td>
+			{% endfor %}
 		</tr>
-
-	{% for review in data %}
-	<tr>
-		{% for att in review %}
-		<td>{{att}}</td>
 		{% endfor %}
-	</tr>
-	{% endfor %}
 	</tbody>
-	</table>
-	</center>
+</table>
+</center>
 </div>
 
 </body>
