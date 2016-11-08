@@ -19,6 +19,7 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
+import datetime
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -203,7 +204,6 @@ def review():
     for review in cursor:
         reviews.append([review['customer'], review['product'], review['review'], review['date']])
 
-
     cursor = g.conn.execute("SELECT pid, name FROM PRODUCT")
     products = [];
     for product in cursor:
@@ -230,12 +230,17 @@ def postReview():
     name = request.form['name']
     email = request.form['email']
     password = request.form['password']
-    product = request.form['selectbox3'].split(":")
-    pid, pname = product[0], ''.join(product[1:])
+    pid = request.form['selectbox3']
     review = request.form['message']
 
+    # first use email to get cid
+    cursor = g.conn.execute("SELECT c.cid FROM CUSTOMER c WHERE c.email = %s and c.password = %s", (email, password))
+    cid = cursor.fetchone()['cid']
+
+
+    g.conn.execute("INSERT INTO review(cid, date, comment, pid) VALUES (%s, %s, %s, %s)", (cid, str(datetime.date.today()), review, pid ))
     print review
-    return redirect('/')
+    return redirect('/review')
 
 
 

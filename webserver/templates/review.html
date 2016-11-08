@@ -70,9 +70,10 @@
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="product">Product</label>
 							<div class="col-md-9" >
-								<div class="bfh-selectbox" type="text" data-name="selectbox3" data-value="asdf" data-filter="true">
+								<div class="bfh-selectbox" type="text" data-name="selectbox3" data-value = '0' data-filter="true">
+									<div data-value='0'></div>
 									{% for product in productkey %}
-									<div data-value={{product[0]}}>{{product[0]}}:{{product[1]}}</div>
+									<div data-value={{product[0]}}>{{product[1]}}</div>
 									{% endfor %}
 								</div>
 							</div>
