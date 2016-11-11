@@ -221,7 +221,6 @@ def review():
 @app.route('/add', methods=['POST'])
 def add():
     name = request.form['name']
-    print name
     cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
     g.conn.execute(text(cmd), name1 = name, name2 = name);
     return redirect('/')
@@ -239,7 +238,6 @@ def postReview():
     cid = cursor.fetchone()['cid']
 
     g.conn.execute("INSERT INTO review(cid, date, comment, pid) VALUES (%s, %s, %s, %s)", (cid, str(datetime.date.today()), review, pid ))
-    print review
     return redirect('/review')
 
 
@@ -343,7 +341,6 @@ def viewprofile():
         oid, date, aid, totalprice = order['oid'], order['date'], order['aid'], order['total_price']
         tmp = g.conn.execute("SELECT * FROM ADDRESS WHERE aid = %s", (aid)).fetchone()
         address = tmp['street_address'] + ' ' + tmp['city'] + ' ' + tmp['state'] + tmp['zip'] + ' ' + tmp['country']
-        print address
         # get all tuples (product & quantity) of this oid
         pqs = g.conn.execute("SELECT pid, quantity FROM order_product WHERE oid = %s", (oid))
         products = ""
@@ -375,7 +372,6 @@ def updateProfile():
     country, state, city, streetaddress, zipcode = request.form['country'], request.form['state'], request.form['city'], request.form['streetaddress'], request.form['zipcode']
     g.conn.execute("UPDATE customer SET password=%s, name=%s WHERE email=%s", (password, username, email))
     count = g.conn.execute("SELECT count(*) FROM address WHERE country=%s AND state=%s AND city=%s AND street_address=%s AND zip=%s", (country, state, city, streetaddress, zipcode)).fetchone()['count'];
-    print "count=", count
 
     # the address doesn't exist in the database, create new address
     if count==0:
@@ -441,7 +437,7 @@ if __name__ == "__main__":
     @click.option('--debug', is_flag=True)
     @click.option('--threaded', is_flag=True)
     @click.argument('HOST', default='0.0.0.0')
-    @click.argument('PORT', default=8111, type=int)
+    @click.argument('PORT', default=8080, type=int)
     def run(debug, threaded, host, port):
         """
         This function handles command line parameters.
