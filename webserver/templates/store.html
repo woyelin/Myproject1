@@ -34,25 +34,177 @@
     <hr>
 
     <center>
-        <table width="65%">
+        <table width="80%">
             <thead>
                 <tr>
                     <th>Pid</th>
-                    <th>Name</th>
+                    <th>Product</th>
                     <th>Price</th>
                     <th>Weight</th>
+                    <th>Supplier</th>
+                    <th>Shipper</th>
+                    <th>ShipRate</th>
+                    <th>Quantity</th>
+                    <th>Buy</th>
                 </tr>
             </thead>
             <tbody>
-                {% for l in data %}
+                {% for product in data %}
                 <tr>
-                    {% for att in l %}
-                    <td>{{att}}</td>
-                    {% endfor %}
+                    <td class='pid'>{{product[0]}}</td>
+                    <td class="pname">{{product[1]}}</td>
+                    <td class="price">{{product[2]}}</td>
+                    <td class="weight">{{product[3]}}</td>
+                    <td class="supplier">{{product[4]}}</td>
+                    <td class="shipper">{{product[5]}}</td>
+                    <td class="shiprate">{{product[6]}}</td>
+                    <td><input class='quantity' type='text' style="max-width:60px"></td>
+                    <td class='add'><button class="addToCart">Add</button></td>
                 </tr>
                 {% endfor %}
+<!--                 <tr>
+                    <td class='pid'>1</td>
+                    <td class='pname'>Macbook</td>
+                    <td class='price'>1544</td>
+                    <td class='weight'>3.6</td>
+                    <td class='supplier'>Apple</td>
+                    <td class='shipper'>UPS</td>
+                    <td class='shiprate'>3.7</td>
+                    <td><input class='quantity' type='text' style="max-width:60px"></td>
+                    <td class='buy'><button class="addToCart">buy</button></td>
+                </tr>
+                <tr>
+                    <td class='pid'>2</td>
+                    <td class='pname'>Thinkpad</td>
+                    <td class='price'>1200</td>
+                    <td class='weight'>3.2</td>
+                    <td class='supplier'>IBM</td>
+                    <td class='shipper'>Prime</td>
+                    <td class='shiprate'>2.5</td>
+                    <td><input class='quantity' type='text' style="max-width:60px"></td>
+                    <td class='add'><button class="addToCart">Add</button></td>
+                </tr> -->
             </tbody>
         </table>
     </center>
+    <legend></legend>
+
+    <center>
+    <h3>Your shopping cart <h5><button class="clear" type='button' >Clear</button></h5></h3>
+    <form>
+        <table id="cart" width="50%">
+            <thead>
+                <tr>
+                    <th>pid</th>
+                    <th>pname</th>
+                    <th>quantity</th>
+                    <th>price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr></tr>
+            </tbody>
+        </table>
+    </form>
+
+    </center>
+    <legend></legend>
+
+
+<center>
+    <form method="POST" action="/placeorder">
+        <label >Email</label>
+        <input type="text" name="email" placeholder="Enter your email" ><br>
+        <label style="display:inline-block">Password</label>
+        <input type="text" name="password" placeholder="Enter your password"><br>
+        <label>All Products</label>
+        <input name="allproducts" id='allproducts' readonly='true'><br>
+        <label style="display:inline-block">Total Price</label>
+        <input name="totalprice"  id='totalprice' value=0.0 readonly='true'><br>
+        <input type="submit" value="Place Your order" class="placeorder"><br>
+    </form>
+</center>
+            
+
+<!--     <center>
+        <h3>Your order</h3>
+        <form method="POST" action="/placeorder">
+            <div>
+                <label name='totalprice'>353</label>
+                <label name='date'>date</label>
+                <label name='username'>username</label>
+                <label name='email'>email</label>
+            </div>
+
+        </form>
+    </center> -->
+
+
+    <script>
+    $(".addToCart").click(function() {
+        var row = $(this).closest("tr")
+        var pid = row.find('.pid').text()
+        var pname = row.find('.pname').text()
+        var quantity = row.find('.quantity').val();
+        if(isNaN(parseInt(quantity)) ) {
+            alert("Invalid input")
+            row.find('.quantity').val("");
+            return;
+        }
+        var weight = row.find('.weight').text()
+        var shiprate = row.find('.shiprate').text()
+        var price = (parseFloat(quantity) * parseFloat(row.find('.price').text()) + parseFloat(weight) * parseFloat(shiprate)).toFixed(2)
+
+        var str="<tr><td>"+pid+"</td><td>"+pname+"</td><td>"+quantity+"</td><td>"+price+"</td></tr>"
+        $("#totalprice").prop("readonly", false);
+        var val = (parseFloat(price) + parseFloat($('#totalprice').val())).toFixed(2)
+        $("#totalprice").val(val)
+        $("#totalprice").prop("readonly", true);
+        $("#cart").append(str)
+
+        $("#allproducts").prop("readonly", false);
+        var cur = $("#allproducts").val()
+        if(cur !="")  cur += "|";
+        cur += pid + '*' + quantity;
+        $("#allproducts").val(cur)
+        $("#allproducts").prop("readonly", true);
+        row.find('.quantity').val("");
+    })
+
+    $(".clear").click(function(){
+        $("#cart tbody tr").remove()
+        $('#totalprice').prop("readonly", false);
+        $('#totalprice').val("0.0")
+        $('#totalprice').prop("readonly", true);
+        $('#allproducts').prop("readonly", false);
+        $('#allproducts').val("")
+        $('#allproducts').prop("readonly", true);
+    })
+
+    $(".placeorder").click(function() {
+        $("#totalprice").prop("readonly", false);
+        $('#totalprice').value="0.0";
+        $("#totalprice").prop("readonly", true);
+    })
+
+
+    // $("#confirm").click(function() {
+    //     $('#totalprice').prop("readonly", false);
+    //     val = 0.0
+    //     for (var i=0; i<$("#cart tbody tr").length; ++i) {
+    //         parseFloat($("#cart tbody").find('td:eq('+i+')')[0].innerHTML)
+    //         val += parseFloat($("#cart tbody").find('td:eq('+i+')')[0].innerHTML)
+    //     }
+    //     // if ($('#totalprice').val()!="") 
+    //     //     val = parseFloat($('#totalprice').val())
+    //     // val += parseFloat($("#cart tbody").find('td:eq(3)')[0].innerHTML)
+    //     $('#totalprice').val(val)
+    //     $('#totalprice').prop("readonly", true);
+
+    // })
+
+
+    </script>
+
 </body>
 </html>

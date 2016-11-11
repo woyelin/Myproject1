@@ -18,7 +18,7 @@ Read about it online.
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, flash, session
 import datetime
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -64,13 +64,15 @@ engine = create_engine(DATABASEURI)
 # 
 # The setup code should be deleted once you switch to using the Part 2 postgresql database
 #
-engine.execute("""DROP TABLE IF EXISTS test;""")
-engine.execute("""CREATE TABLE IF NOT EXISTS test ( id serial, name text);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+# engine.execute("""DROP TABLE IF EXISTS test;""")
+# engine.execute("""CREATE TABLE IF NOT EXISTS test ( id serial, name text);""")
+# engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 #
 # END SQLITE SETUP CODE
 #
 
+
+app.secret_key = 'what'
 
 
 @app.before_request
@@ -188,10 +190,10 @@ def another():
 
 @app.route('/store')
 def store():
-    cursor = g.conn.execute("select * from product")
+    cursor = g.conn.execute("select p.pid, p.name as product, p.price, p.weight, s.name as supplier, sh.name as shipper, sh.shiprate from product as p, product_supplier as ps, supplier as s, shipper as sh, partner as pa where ps.pid = p.pid and ps.sid = s.sid and pa.shid = sh.shid and pa.sid = s.sid")
     products = []
     for product in cursor:
-        products.append([product['pid'], product['name'], product['price'], product['weight']])
+        products.append([product['pid'], product['product'], product['price'], product['weight'], product['supplier'], product['shipper'], product['shiprate']])
     context = dict(data=products)
     return render_template("store.html", **context)
 
@@ -202,7 +204,7 @@ def review():
     cursor = g.conn.execute("SELECT c.name customer, p.name product, r.comment review, r.date  FROM review r, customer c, product p where p.pid = r.pid and r.cid = c.cid")
     reviews = []
     for review in cursor:
-        reviews.append([review['customer'], review['product'], review['review'], review['date']])
+        reviews.append([review['customer'], review['product'], review['date'], review['review']] )
 
     cursor = g.conn.execute("SELECT pid, name FROM PRODUCT")
     products = [];
@@ -225,9 +227,8 @@ def add():
     return redirect('/')
 
 
-@app.route('/postreview', methods=["POST"])
+@app.route('/postreview', methods=["GET", "POST"])
 def postReview():
-    name = request.form['name']
     email = request.form['email']
     password = request.form['password']
     pid = request.form['selectbox3']
@@ -237,12 +238,34 @@ def postReview():
     cursor = g.conn.execute("SELECT c.cid FROM CUSTOMER c WHERE c.email = %s and c.password = %s", (email, password))
     cid = cursor.fetchone()['cid']
 
-
     g.conn.execute("INSERT INTO review(cid, date, comment, pid) VALUES (%s, %s, %s, %s)", (cid, str(datetime.date.today()), review, pid ))
     print review
     return redirect('/review')
 
 
+@app.route('/placeorder', methods=['GET', 'POST'])
+def placeorder():
+    email = request.form['email']
+    password = request.form['password']
+    totalprice = request.form['totalprice']
+    allproducts = request.form['allproducts'].split('|')
+
+    # first get cid from email and password
+    cid = g.conn.execute("SELECT cid FROM customer WHERE email=%s AND password=%s", (email, password)).fetchone()['cid']
+    # then get its aid from live table
+    aid = g.conn.execute("SELECT aid FROM live WHERE cid=%s", (cid)).fetchone()['aid']
+    # finally insert into orders table
+    g.conn.execute("INSERT INTO orders(total_price, date,  cid, aid) VALUES (%s, %s, %s, %s) ", (float(totalprice), str(datetime.date.today()), cid, aid))
+
+    # get the current oid
+    oid = g.conn.execute("SELECT max(oid) oid FROM orders").fetchone()['oid']
+    # insert into order_product
+    for product in allproducts:
+        tmp = product.split('*')
+        pid, quantity = tmp[0], tmp[1]
+        g.conn.execute("INSERT INTO order_product VALUES(%s, %s, %s)", (oid, pid, quantity))
+
+    return redirect('/store')
 
 
 @app.route('/UserSignup', methods=['POST'])
@@ -282,9 +305,6 @@ def userSignup():
     # 	print cursor.previous()
     # 	aid = cursor.previous()['aid']
 
-
-
-
     # if(cursor.rowcount==0):
     #     # insert into address table
     #     args = (country, state, city, streetaddress,zipcode )
@@ -305,14 +325,102 @@ def userSignup():
     return redirect('/store')
 
 
+@app.route('/viewprofile', methods=['POST'])
+def viewprofile():
+    email, password = request.form['email'], request.form['password']
+    record = g.conn.execute("SELECT cid, name FROM CUSTOMER WHERE email=%s AND password=%s", (email, password)).fetchone()
+    cid, name = record['cid'], record['name']
+    curaid = g.conn.execute("SELECT aid FROM live WHERE cid=%s", (cid)).fetchone()['aid']
+    tmp = g.conn.execute("SELECT * FROM ADDRESS WHERE aid = %s", (curaid)).fetchone()
+    curaddress = tmp['street_address'] + ' ' + tmp['city'] + ' ' + tmp['state'] + tmp['zip'] + ' ' + tmp['country']
+
+    profile = [name, curaddress, email, password]
+
+    #get all orders information
+    cursor = g.conn.execute("SELECT * FROM orders WHERE cid = %s", (cid))
+    orders = []
+    for order in cursor:
+        oid, date, aid, totalprice = order['oid'], order['date'], order['aid'], order['total_price']
+        tmp = g.conn.execute("SELECT * FROM ADDRESS WHERE aid = %s", (aid)).fetchone()
+        address = tmp['street_address'] + ' ' + tmp['city'] + ' ' + tmp['state'] + tmp['zip'] + ' ' + tmp['country']
+        print address
+        # get all tuples (product & quantity) of this oid
+        pqs = g.conn.execute("SELECT pid, quantity FROM order_product WHERE oid = %s", (oid))
+        products = ""
+        for pq in pqs:
+            productname = g.conn.execute("SELECT name FROM product WHERE pid = %s ", (pq['pid'])).fetchone()['name']
+            products += ' ' + str(pq['quantity']) + ' * ' + str(productname) + '; '
+
+        orders.append([date, products, address,totalprice])
+
+    context = dict(orderskey=orders, profilekey=profile)
+    return render_template("viewprofile.html", **context)
+
+
 @app.route('/signup')
 def signup():
     return render_template("signup.html")
 
-@app.route('/login')
-def login():
-    abort(401)
-    this_is_never_executed()
+@app.route('/getUpdateProfile', methods=["GET", "POST"])
+def getUpdateProfile():
+    email, password = request.form['email'], request.form['password']
+    context=dict(profile=[email, password])
+
+    return render_template("updateProfile.html", **context)
+
+
+@app.route('/updateProfile', methods=['GET', 'POST'])
+def updateProfile():
+    email, password, username = request.form['email'], request.form['password'], request.form['username']
+    country, state, city, streetaddress, zipcode = request.form['country'], request.form['state'], request.form['city'], request.form['streetaddress'], request.form['zipcode']
+    g.conn.execute("UPDATE customer SET password=%s, name=%s WHERE email=%s", (password, username, email))
+    count = g.conn.execute("SELECT count(*) FROM address WHERE country=%s AND state=%s AND city=%s AND street_address=%s AND zip=%s", (country, state, city, streetaddress, zipcode)).fetchone()['count'];
+    print "count=", count
+
+    # the address doesn't exist in the database, create new address
+    if count==0:
+        g.conn.execute("INSERT INTO address(country, state, city, street_address, zip) VALUES(%s, %s, %s, %s, %s)", (country, state, city, streetaddress, zipcode))
+    aid = g.conn.execute("SELECT aid FROM address WHERE country=%s AND state=%s AND city=%s AND street_address= %s and zip= %s", (country, state, city, streetaddress, zipcode)).fetchone()['aid']
+    cid = g.conn.execute("SELECT cid FROM customer WHERE email = %s", (email)).fetchone()['cid']
+    g.conn.execute("UPDATE live SET aid = %s WHERE cid = %s", (aid, cid))
+    return redirect('/store')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 404
+
+
+# @app.route('/login')
+# def login():
+#     # abort(401)
+#     # this_is_never_executed()
+#     return render_template("login.html")
+
+
+# @app.route('/loguserin', methods=['GET', 'POST'])
+# def loguserin():
+#     email, password = request.form['email'], request.form['password']
+#     print email, password
+
+#     cursor = g.conn.execute("SELECT email, password FROM CUSTOMER")
+#     users = []
+#     loginSuccess = False
+#     for row in cursor:
+#         if email == row['email'] and password == row['password']:
+#             loginSuccess = True
+#     if loginSuccess == False:
+#         flash("<p>No user found</p>")
+#     else:
+#         flash('You were logged in')
+#         print session
+#         return redirect('/store')
+#     return render_template('/login.html')
+
 
 if __name__ == "__main__":
     import click

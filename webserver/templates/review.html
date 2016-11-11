@@ -3,9 +3,12 @@
 <head>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 	<!-- jQuery library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script type='text/javascript' src=https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js></script>
+
+
 
 	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -45,13 +48,6 @@
 				<form class="form-horizontal" action="/postreview" method="POST">
 					<fieldset>
 						<legend class="text-center">Write your review</legend>
-
-						<!-- Name input-->
-						<div class="form-group">
-							<label class="col-md-3 control-label" for="name">Username</label>
-							<div class="col-md-9">
-								<input id="name" name="name" type="text" placeholder="Your name" class="form-control"></div>
-						</div>
 
 						<!-- Email input-->
 						<div class="form-group">
@@ -111,14 +107,14 @@
 
 <h2 style="text-align: center">History Reviews</h2>
 <div id="allReviews">
-<center>
-<table id='historyReviews' style="width:90% border: 1px solid black">
+<!--<table id='historyReviews' style="width:90% border: 1px solid black">-->
+<table id="historyReviews" class="table table-striped table-bordered" cellspacing="0" width="95%">
 	<thead>
 		<tr>
 			<th>User</th>
 			<th>Product</th>
-			<th>Reviews</th>
 			<th>Date</th>
+			<th>Reviews</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -132,8 +128,15 @@
 		{% endfor %}
 	</tbody>
 </table>
-</center>
 </div>
+
+
+	<script>
+		$(document).ready(function() {
+			$('#historyReviews').DataTable();
+		});
+	</script>
+
 
 </body>
 </html>

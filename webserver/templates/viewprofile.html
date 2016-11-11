@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+	<script type='text/javascript' src=https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js></script>
+	<script type='text/javascript' src=https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js></script>
+
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- Latest compiled JavaScript -->
+	<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+	<ul class="nav nav-tabs pull-right" style="font-size: 15px">
+		<li role="presentation">
+			<a href="/">Home</a>
+		</li>
+		<li role="presentation">
+			<a href="store">Store</a>
+		</li>
+		<li role="presentation">
+			<a href="review">Review</a>
+		</li>
+		<li role="presentation">
+			<a href="signup">Sign Up</a>
+		</li>
+	</ul>
+	<legend></legend>
+
+	<center>
+		<h3>Your Personal Profile</h3>
+		<table border='1' cellpadding='20px' style="border-collapse: collapse;">
+			<tr>
+				<td>User Name</td>
+				<td>{{profilekey[0]}}</td>
+			</tr>
+			<tr>
+				<td>Current Address</td>
+				<td>{{profilekey[1]}}</td>
+			</tr>
+		</table>
+		<form method="POST" action="/getUpdateProfile">
+			<label>Email:</label>
+			<input name='email' readonly='true' value={{profilekey[2]}}><br>
+			<label>Password:</label>
+			<input name='password' readonly='true' value={{profilekey[3]}}><br>
+			<input type="submit" value="Update Profile">
+		</form>
+	</center>
+
+	<center><h3>Your Order History</h3></center>
+	<table id="orderhistory" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Products</th>
+                <th>Address</th>
+                <th>totalPrice</th>
+            </tr>
+        </thead>
+        <tbody>
+        	{% for order in orderskey %}
+        	<tr>
+        		{% for attri in order %}
+        		<td>
+        			{{attri}}
+        		</td>
+        		{% endfor %}
+        	</tr>
+        	{% endfor %}
+        </tbody>
+	</table>
+	
+	<script>
+		$(document).ready(function() {
+			$('#orderhistory').DataTable();
+		});
+	</script>
+</body>
+</html>

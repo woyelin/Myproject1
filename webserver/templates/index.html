@@ -30,13 +30,39 @@
 			<a href="signup">Sign Up</a>
 		</li>
 	</ul>
+	<legend></legend>
 
-	<div>
-		{% for n in data %}
-		<div>{{n}}</div>
-		{% endfor %}
-	</div>
-	
+	<center><h2>View Your Profile</h2></center>
+
+<form method="POST" action="/viewprofile" class="form-horizontal">
+	<fieldset>
+		<!-- Email -->
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="textinput">Email</label>
+			<div class="col-md-4">
+				<input id="email" name="email" placeholder="Insert your Email" class="form-control input-md" required="" type="text">
+				<span class="help-block"></span>
+			</div>
+		</div>
+
+		<!-- password-->
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="textinput">Password</label>
+			<div class="col-md-4">
+				<input id="password" name="password" placeholder="Insert your Password" class="form-control input-md" required="" type="text">
+				<span class="help-block"></span>
+			</div>
+		</div>
+
+		<!-- Button -->
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="singlebutton"></label>
+			<div class="col-md-4">
+				<button id="singlebutton" name="singlebutton" class="btn btn-primary pull-right" type='submit' >View Profile</button>
+			</div>
+		</div>
+	</fieldset>
+</form>
+
 </body>
-
 </html>

@@ -1,64 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<!-- jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-	<!-- Latest compiled JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-	<!-- bootstrap helper form -->
+   	<!-- bootstrap helper form -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/css/bootstrap-formhelpers.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.js"></script>
 
-<!-- 	<script type='text/javascript' src="{{ url_for('static', filename='js/signup.js')}}"></script> -->
-
-<!-- 	<script type='text/javascript' src="../static/js/signup.js"></script> -->
-
 	<meta charset="UTF-8">
-	<title>Sign Up</title>
+	<title>Document</title>
 </head>
-
 <body>
+    <ul class="nav nav-tabs pull-right" style="font-size: 15px">
+        <li role="presentation">
+            <a href="/">Home</a>
+        </li>
+        <li role="presentation">
+            <a href="store">Store</a>
+        </li>
+        <li role="presentation">
+            <a href="review">Review</a>
+        </li>
+        <li role="presentation">
+            <a href="signup">Sign Up</a>
+        </li>
+    </ul>
+    <legend></legend>
 
-	<ul class="nav nav-tabs pull-right" style="font-size: 15px">
-		<li role="presentation">
-			<a href="/">Home</a>
-		</li>
-		<li role="presentation">
-			<a href="store">Store</a>
-		</li>
-		<li role="presentation">
-			<a href="review">Review</a>
-		</li>
-		<li role="presentation">
-			<a href="signup">Sign Up</a>
-		</li>
-	</ul>
-	<legend></legend>
 
-	<div class="container">
+<div class="container">
 		<div class="row">
-			<center style="font-size: 35px">Sign Up Your Account</center>
-			<form method="POST" action="/UserSignup" class="form-horizontal">
-				<fieldset>
-					<!-- Username -->
-					<div class="form-group">
-						<label class="col-md-4 control-label" for="textinput">User Name</label>
-						<div class="col-md-4">
-							<input id="username" name="username" placeholder="Insert your user name" class="form-control input-md" required="" type="text">
-							<span class="help-block"></span>
-						</div>
-					</div>
 
+			<center style="font-size: 35px">Update your profile</center>
+
+			<form method="POST" action="/updateProfile" class="form-horizontal">
+				<fieldset>
 					<!-- Email -->
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Email</label>
 						<div class="col-md-4">
-							<input id="email" name="email" placeholder="Insert your Email" class="form-control input-md" required="" type="text">
+							<input readonly='true' id="email" name="email" value={{profile[0]}} class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -67,10 +53,20 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Password</label>
 						<div class="col-md-4">
-							<input id="password" name="password" placeholder="Insert your Password" class="form-control input-md" required="" type="text">
+							<input id="password" name="password" placeholder="Insert your New Password" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
+					<!-- Username -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">User Name</label>
+						<div class="col-md-4">
+							<input id="username" name="username" placeholder="Insert your New user name" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+
 
 					<!-- Text input: Country -->
 					<div class="form-group">
@@ -92,7 +88,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">City</label>
 						<div class="col-md-4">
-							<input id="city" name="city" placeholder="Insert your City" class="form-control input-md" required="" type="text">
+							<input id="city" name="city" placeholder="Insert your New City" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -101,7 +97,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Street Address</label>
 						<div class="col-md-4">
-							<input id="streetaddress" name="streetaddress" placeholder="Insert your street address" class="form-control input-md" required="" type="text">
+							<input id="streetaddress" name="streetaddress" placeholder="Insert your New street address" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -110,7 +106,7 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="textinput">Zipcode</label>
 						<div class="col-md-4">
-							<input id="zipcode" name="zipcode" placeholder="Insert your Zipcode" class="form-control input-md" required="" type="text">
+							<input id="zipcode" name="zipcode" placeholder="Insert your New Zipcode" class="form-control input-md" required="" type="text">
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -127,5 +123,9 @@
 			</form>
 		</div>
 	</div>
+
+
+
+
 </body>
 </html>
