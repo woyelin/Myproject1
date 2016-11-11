@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<center>
+		<h1 style="color: red">DELETE YOUR USER ACCOUNT</h1>
+			<form method="POST" action="/delete" class="form-horizontal">
+				<fieldset>
+					<!-- Email -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Email</label>
+						<div class="col-md-4">
+							<input id="email" name="email" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- password-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="textinput">Password</label>
+						<div class="col-md-4">
+							<input id="password" name="password" placeholder="Insert your New Password" class="form-control input-md" required="" type="text">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<!-- Button -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="singlebutton"></label>
+						<div class="col-md-4">
+							<button id="singlebutton" name="singlebutton" class="btn btn-primary" type='submit' >Delete</input>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+	</center>
+</body>
+</html>

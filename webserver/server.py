@@ -386,6 +386,18 @@ def updateProfile():
     return redirect('/store')
 
 
+@app.route('/toDelete')
+def toDelete():
+    return render_template("deleteAccount.html")
+
+
+@app.route('/delete', methods=['GET', 'POST'])
+def delete():
+    email, password = request.form['email'], request.form['password']
+    g.conn.execute("DELETE FROM customer WHERE email=%s AND password=%s", (email, password))
+    return redirect('/store')
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -393,6 +405,7 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template('500.html'), 404
+
 
 
 # @app.route('/login')
