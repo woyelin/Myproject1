@@ -211,7 +211,7 @@ def review():
     products = [];
     for product in cursor:
         products.append([product['pid'], product['name']])
-    cursor.clos()
+    cursor.close()
     context = dict(data=reviews, productkey=products)
     return render_template("review.html", **context)
 
@@ -338,7 +338,6 @@ def viewprofile():
 
     #get all orders information
     cursor = g.conn.execute("SELECT * FROM orders WHERE cid = %s", (cid))
-    cursor.close()
     orders = []
     for order in cursor:
         oid, date, aid, totalprice = order['oid'], order['date'], order['aid'], order['total_price']
@@ -352,7 +351,7 @@ def viewprofile():
             products += ' ' + str(pq['quantity']) + ' * ' + str(productname) + '; '
 
         orders.append([date, products, address,totalprice])
-
+    cursor.close()
     context = dict(orderskey=orders, profilekey=profile)
     return render_template("viewprofile.html", **context)
 
@@ -413,7 +412,7 @@ if __name__ == "__main__":
     @click.option('--debug', is_flag=True)
     @click.option('--threaded', is_flag=True)
     @click.argument('HOST', default='0.0.0.0')
-    @click.argument('PORT', default=8111, type=int)
+    @click.argument('PORT', default=8080, type=int)
     def run(debug, threaded, host, port):
         """
         This function handles command line parameters.
