@@ -130,16 +130,16 @@ def index():
     """
 
     # DEBUG: this is debugging code to see what request looks like
-    print request.args
+    # print request.args
 
-    #
-    # example of a database query
-    #
-    cursor = g.conn.execute("SELECT name FROM customer")
-    names = []
-    for result in cursor:
-        names.append(result['name'])  # can also be accessed using result[0]	
-    cursor.close()
+    # #
+    # # example of a database query
+    # #
+    # cursor = g.conn.execute("SELECT name FROM customer")
+    # names = []
+    # for result in cursor:
+    #     names.append(result['name'])  # can also be accessed using result[0]	
+    # cursor.close()
 
     #
     # Flask uses Jinja templates, which is an extension to HTML where you can
@@ -167,13 +167,13 @@ def index():
     #     <div>{{n}}</div>
     #     {% endfor %}
     #
-    context = dict(data = names)
+    # context = dict(data = names)
 
     #
     # render_template looks in the templates/ folder for files.
     # for example, the below file reads template/index.html
     #
-    return render_template("index.html", **context)
+    return render_template("index.html")
 
 #
 # This is an example of a different path.  You can see it at
@@ -194,6 +194,7 @@ def store():
     products = []
     for product in cursor:
         products.append([product['pid'], product['product'], product['price'], product['weight'], product['supplier'], product['shipper'], product['shiprate']])
+    cursor.close()
     context = dict(data=products)
     return render_template("store.html", **context)
 
@@ -205,25 +206,23 @@ def review():
     reviews = []
     for review in cursor:
         reviews.append([review['customer'], review['product'], review['date'], review['review']] )
-
+    cursor.close()
     cursor = g.conn.execute("SELECT pid, name FROM PRODUCT")
     products = [];
     for product in cursor:
         products.append([product['pid'], product['name']])
-
+    cursor.clos()
     context = dict(data=reviews, productkey=products)
     return render_template("review.html", **context)
 
 
-
-
-# Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-    name = request.form['name']
-    cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
-    g.conn.execute(text(cmd), name1 = name, name2 = name);
-    return redirect('/')
+# # Example of adding new data to the database
+# @app.route('/add', methods=['POST'])
+# def add():
+#     name = request.form['name']
+#     cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
+#     g.conn.execute(text(cmd), name1 = name, name2 = name);
+#     return redirect('/')
 
 
 @app.route('/postreview', methods=["GET", "POST"])
@@ -236,8 +235,10 @@ def postReview():
     # first use email to get cid
     cursor = g.conn.execute("SELECT c.cid FROM CUSTOMER c WHERE c.email = %s and c.password = %s", (email, password))
     cid = cursor.fetchone()['cid']
+    cursor.close()
 
-    g.conn.execute("INSERT INTO review(cid, date, comment, pid) VALUES (%s, %s, %s, %s)", (cid, str(datetime.date.today()), review, pid ))
+    cursor = g.conn.execute("INSERT INTO review(cid, date, comment, pid) VALUES (%s, %s, %s, %s)", (cid, str(datetime.date.today()), review, pid ))
+    cursor.close()
     return redirect('/review')
 
 
@@ -253,8 +254,8 @@ def placeorder():
     # then get its aid from live table
     aid = g.conn.execute("SELECT aid FROM live WHERE cid=%s", (cid)).fetchone()['aid']
     # finally insert into orders table
-    g.conn.execute("INSERT INTO orders(total_price, date,  cid, aid) VALUES (%s, %s, %s, %s) ", (float(totalprice), str(datetime.date.today()), cid, aid))
-
+    cursor = g.conn.execute("INSERT INTO orders(total_price, date,  cid, aid) VALUES (%s, %s, %s, %s) ", (float(totalprice), str(datetime.date.today()), cid, aid))
+    cursor.close()
     # get the current oid
     oid = g.conn.execute("SELECT max(oid) oid FROM orders").fetchone()['oid']
     # insert into order_product
@@ -292,7 +293,8 @@ def userSignup():
     	aid = cursor.fetchone()['aid']
     
     # insert live table
-    g.conn.execute("INSERT INTO live VALUES(%s, %s)", (cid, aid))
+    cursor = g.conn.execute("INSERT INTO live VALUES(%s, %s)", (cid, aid))
+    cursor.close()
 
 
     # # check whether address already exists
@@ -336,6 +338,7 @@ def viewprofile():
 
     #get all orders information
     cursor = g.conn.execute("SELECT * FROM orders WHERE cid = %s", (cid))
+    cursor.close()
     orders = []
     for order in cursor:
         oid, date, aid, totalprice = order['oid'], order['date'], order['aid'], order['total_price']
@@ -390,7 +393,8 @@ def toDelete():
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
     email, password = request.form['email'], request.form['password']
-    g.conn.execute("DELETE FROM customer WHERE email=%s AND password=%s", (email, password))
+    cursor = g.conn.execute("DELETE FROM customer WHERE email=%s AND password=%s", (email, password))
+    cursor.close()
     return redirect('/store')
 
 
@@ -401,34 +405,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template('500.html'), 404
-
-
-
-# @app.route('/login')
-# def login():
-#     # abort(401)
-#     # this_is_never_executed()
-#     return render_template("login.html")
-
-
-# @app.route('/loguserin', methods=['GET', 'POST'])
-# def loguserin():
-#     email, password = request.form['email'], request.form['password']
-#     print email, password
-
-#     cursor = g.conn.execute("SELECT email, password FROM CUSTOMER")
-#     users = []
-#     loginSuccess = False
-#     for row in cursor:
-#         if email == row['email'] and password == row['password']:
-#             loginSuccess = True
-#     if loginSuccess == False:
-#         flash("<p>No user found</p>")
-#     else:
-#         flash('You were logged in')
-#         print session
-#         return redirect('/store')
-#     return render_template('/login.html')
 
 
 if __name__ == "__main__":
